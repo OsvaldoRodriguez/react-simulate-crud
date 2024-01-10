@@ -1,0 +1,142 @@
+// Importa las dependencias necesarias
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Importa tus componentes
+import RutaPrincipal from './RutaPrincipal';
+import RutaHija from './RutaHija';
+
+// Configura las rutas con React Router v6
+function App() {
+  // Estado para el array en la ruta principal
+  const [miArray, setMiArray] = useState(['dato1', 'dato2']);
+
+  // Función para actualizar el array desde la ruta hija
+  const actualizarArrayDesdeRutaHija = (nuevoArray) => {
+    setMiArray(nuevoArray);
+  };
+
+  return (
+    <Router>
+      <Routes>
+        {/* Pasa el array y la función de actualización a la ruta principal */}
+        <Route
+          path="/"
+          element={<RutaPrincipal miArray={miArray} actualizarArray={actualizarArrayDesdeRutaHija} />}
+        />
+        {/* Pasa el array y la función de actualización a la ruta hija */}
+        <Route
+          path="/ruta-hija"
+          element={<RutaHija miArray={miArray} actualizarArray={actualizarArrayDesdeRutaHija} />}
+        />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
+
+// RutaHija.js
+import React from 'react';
+
+// Recibe el array y la función de actualización como props
+function RutaHija({ miArray, actualizarArray }) {
+  const agregarNuevoDato = () => {
+    // Actualiza el array utilizando la función de actualización
+    const nuevoArray = [...miArray, 'nuevoDato'];
+    actualizarArray(nuevoArray);
+  };
+
+  return (
+    <div>
+      <h1>Ruta Hija</h1>
+      <button onClick={agregarNuevoDato}>Agregar Nuevo Dato</button>
+      {/* Accede al array pasado como prop 'miArray' */}
+      <ul>
+        {miArray.map((dato, index) => (
+          <li key={index}>{dato}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default RutaHija;
+
+
+// =======================================================================
+
+crear formulario
+
+// Formulario.js
+import React, { useState } from 'react';
+
+const Formulario = () => {
+  // Estado para almacenar los datos del formulario
+  const [formData, setFormData] = useState({
+    nombre: '',
+    email: '',
+    // Agrega más campos según tus necesidades
+  });
+
+  // Manejador de cambios en los campos del formulario
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Manejador de envío del formulario
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Lógica para manejar los datos del formulario (puedes enviarlos a un servidor, almacenarlos localmente, etc.)
+    console.log('Datos del formulario:', formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        Nombre:
+        <input
+          type="text"
+          name="nombre"
+          value={formData.nombre}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      <label>
+        Email:
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      {/* Agrega más campos según tus necesidades */}
+      <button type="submit">Enviar</button>
+    </form>
+  );
+};
+
+export default Formulario;
+
+
+// App.js
+import React from 'react';
+import Formulario from './Formulario';
+
+const App = () => {
+  return (
+    <div>
+      <h1>Formulario de Datos</h1>
+      <Formulario />
+    </div>
+  );
+};
+
+export default App;
